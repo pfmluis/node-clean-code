@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/pfmluis/node-clean-code#readme",
   "devDependencies": {
-    "git-commit-msg-linter": "^3.2.8"
+    "@types/node": "^16.11.7",
+    "git-commit-msg-linter": "^3.2.8",
+    "typescript": "^4.4.4"
   }
 }
