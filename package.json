@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "lint": "eslint"
   },
   "repository": {
     "type": "git",
@@ -17,6 +18,7 @@
   },
   "homepage": "https://github.com/pfmluis/node-clean-code#readme",
   "devDependencies": {
+    "@types/jest": "^27.0.2",
     "@types/node": "^16.11.7",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "eslint": "^7.32.0",
@@ -26,6 +28,9 @@
     "eslint-plugin-promise": "^5.1.1",
     "git-commit-msg-linter": "^3.2.8",
     "husky": "^7.0.4",
+    "jest": "^27.3.1",
+    "ts-jest": "^27.0.7",
+    "ts-node": "^10.4.0",
     "typescript": "^4.4.4"
   }
 }
