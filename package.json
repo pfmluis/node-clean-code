@@ -6,6 +6,8 @@
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
+    "test:unit": "jest -c jest-unit-config.js",
+    "test:integration": "jest -c jest-integration-config.js",
     "lint": "eslint"
   },
   "repository": {
