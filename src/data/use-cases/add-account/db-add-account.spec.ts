@@ -11,11 +11,9 @@ class EncryptorStub implements Encryptor {
 
 class AddAccountRepositoryStub {
   add (account: AddAccountModel): Promise<AccountModel> {
-    return Promise.resolve({ 
-      id: 'valid_id',
-      email: 'valid_email@email.com',
-      name: 'valid_name',
-      password: 'hashed_password'
+    return Promise.resolve({
+      ...account, 
+      id: 'valid_id'
     })
   }
 }
@@ -83,5 +81,21 @@ describe('DbAddAccount', () => {
     }
     const result = sut.add(accountData)
     await expect(result).rejects.toThrow()
+  });
+
+  test('Should return an account on success', async () => {
+    const { sut } = makeSut()
+    const accountData = {
+      name: 'valid_name',
+      email: 'valid_email@mail.com',
+      password: 'validPassword'
+    }
+    const result = await sut.add(accountData)
+    expect(result).toEqual({
+      id: 'valid_id',
+      name: 'valid_name',
+      email: 'valid_email@mail.com',
+      password: 'encrypted_value'
+    })
   });
 });
