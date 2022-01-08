@@ -6,7 +6,7 @@ export class BcryptAdapter implements Encryptor {
     private readonly salt: number
   ) { }
 
-  encrypt(value: string): Promise<string> {
-    return bcrypt.hash(value, this.salt)
+  async encrypt(value: string): Promise<string> {
+    return await bcrypt.hash(value, this.salt)
   }  
 }
