@@ -21,7 +21,9 @@
   },
   "homepage": "https://github.com/pfmluis/node-clean-code#readme",
   "devDependencies": {
+    "@shelf/jest-mongodb": "^2.2.0",
     "@types/jest": "^27.0.2",
+    "@types/mongodb": "^4.0.7",
     "@types/node": "^16.11.7",
     "@types/validator": "^13.7.1",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
@@ -40,6 +42,7 @@
   "dependencies": {
     "@types/bcrypt": "^5.0.0",
     "bcrypt": "^5.0.1",
+    "mongodb": "^4.3.0",
     "validator": "^13.7.0"
   }
 }
