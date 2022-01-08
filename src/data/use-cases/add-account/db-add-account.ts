@@ -13,7 +13,6 @@ export class DbAddAccount implements AddAccount {
   async add(account: AddAccountModel): Promise<AccountModel> {
     const hashedPassword = await this.encryptor.encrypt(account.password)
     const accountData = { ...account, password: hashedPassword}
-    await this.addAccountRepository.add(accountData)
-    return Promise.resolve(null)
+    return  await this.addAccountRepository.add(accountData)
   }
 }
