@@ -1,6 +1,7 @@
-import { MongoClient } from 'mongodb';
 import { MongoHelper } from '../helpers/mongo-helper';
 import { AccountMongoRepository } from './account';
+
+const accountCollectionName = 'accounts'
 
 describe('Account Mongo Repository', () => {
   beforeAll(async () => {
@@ -9,6 +10,11 @@ describe('Account Mongo Repository', () => {
 
   afterAll(async () => {
     await MongoHelper.disconnect()
+  })
+
+  beforeEach(async () => {
+    const accountCollection = MongoHelper.getConnection(accountCollectionName)
+    await accountCollection.deleteMany({})
   })
 
   const makeSut = () => {
