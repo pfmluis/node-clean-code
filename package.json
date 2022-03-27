@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "sucrase-node src/main/server.ts",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:unit": "jest -c jest-unit-config.js",
@@ -37,6 +38,7 @@
     "git-commit-msg-linter": "^3.2.8",
     "husky": "^7.0.4",
     "jest": "^27.3.1",
+    "sucrase": "^3.20.3",
     "ts-jest": "^27.0.7",
     "ts-node": "^10.4.0",
     "typescript": "^4.4.4"
