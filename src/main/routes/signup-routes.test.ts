@@ -7,7 +7,7 @@ const accountCollectionName = 'accounts'
 
 describe('Signup Routes', () => {
   beforeAll(async () => {
-    await MongoHelper.connect()
+    await MongoHelper.connect(process.env.MONGO_URL)
   })
 
   afterAll(async () => {
