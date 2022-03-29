@@ -50,7 +50,7 @@ describe('Log  Controller Decorator', () => {
 
     const result = await sut.handle(httpRequest)
     expect(handleSpy).toHaveBeenCalledWith(httpRequest)
-    expect(result.body).toHaveBeenCalledWith(httpResponse.body)
+    expect(result.body).toEqual(httpResponse.body)
     expect(httpResponse.statusCode).toEqual(httpResponse.statusCode)
   });
 })
