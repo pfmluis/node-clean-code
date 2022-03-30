@@ -18,8 +18,7 @@ describe('Account Mongo Repository', () => {
   })
 
   const makeSut = () => {
-    return new AccountMongoRepository()
-    
+    return new AccountMongoRepository() 
   }
 
   test('Should return an account on success', async () => {
