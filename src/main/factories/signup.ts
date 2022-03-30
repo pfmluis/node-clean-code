@@ -1,6 +1,6 @@
 import { BcryptAdapter } from '../../infrastructure/cryptography/bcrypt-adapter';
 import { EmailValidatorAdapter } from '../../utils/email-validator-adapter';
-import { AccountMongoRepository } from '../../db/mongodb/account-repository/account';
+import { AccountMongoRepository } from '../../infrastructure/db/mongodb/account-repository/account';
 import { DbAddAccount } from '../../data/use-cases/add-account/db-add-account';
 import { SignUpController } from '../../presentation/controllers/signup';
 import { Controller } from '../../presentation/protocols/controller';
