@@ -1,7 +1,7 @@
 import { Authenticator } from '../../../domain/use-cases/authenticator'
 import { EmailValidatorAdapter } from '../../../utils/email-validator-adapter'
 import { MissingParamError } from '../../errors/missing-param-error'
-import { badRequest, serverError } from '../../helpers/http-helpers'
+import { badRequest, serverError, unauthorized } from '../../helpers/http-helpers'
 import { EmailValidator } from '../../protocols/email-validator'
 import { LoginController } from './login'
 
@@ -109,7 +109,6 @@ describe('Login Controller', () => {
 
   test('Should call Authenticator with correct values', async () => {
     const { sut, authenticatorStub } = makeSut()
-    const error = new Error()
     const authenticatorSpy = jest.spyOn(authenticatorStub, 'authenticate')
     const httpRequest = {
       body: {
@@ -122,6 +121,20 @@ describe('Login Controller', () => {
       httpRequest.body.email, 
       httpRequest.body.password,
     )
+  })
+
+  test('Should call 401 if invalid credentials are provided', async () => {
+    const { sut, authenticatorStub } = makeSut()
+    jest.spyOn(authenticatorStub, 'authenticate').mockImplementationOnce(() => Promise.resolve(null))
+    const httpRequest = {
+      body: {
+        email: 'invalid_email@email.com',
+        password: 'any_password'
+      }
+    }
+    
+    const response = await sut.handle(httpRequest)
+    expect(response).toEqual(unauthorized())
   })
 
 })
