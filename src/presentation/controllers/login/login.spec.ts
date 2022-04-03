@@ -1,7 +1,6 @@
 import { Authenticator } from '../../../domain/use-cases/authenticator'
-import { EmailValidatorAdapter } from '../../../utils/email-validator-adapter'
 import { MissingParamError } from '../../errors/missing-param-error'
-import { badRequest, serverError, unauthorized } from '../../helpers/http-helpers'
+import { badRequest, serverError, unauthorized, ok } from '../../helpers/http-helpers'
 import { EmailValidator } from '../../protocols/email-validator'
 import { LoginController } from './login'
 
@@ -137,4 +136,33 @@ describe('Login Controller', () => {
     expect(response).toEqual(unauthorized())
   })
 
+
+  test('Should call 500 if invalid credentials are provided', async () => {
+    const { sut, authenticatorStub } = makeSut()
+    const error = new Error()
+    jest.spyOn(authenticatorStub, 'authenticate').mockImplementationOnce(() => { throw error })
+    const httpRequest = {
+      body: {
+        email: 'invalid_email@email.com',
+        password: 'any_password'
+      }
+    }
+    
+    const response = await sut.handle(httpRequest)
+    expect(response).toEqual(serverError(error))
+  })
+
+
+  test('Should call 200 if invalid credentials are provided', async () => {
+    const { sut } = makeSut()
+    const httpRequest = {
+      body: {
+        email: 'invalid_email@email.com',
+        password: 'any_password'
+      }
+    }
+    
+    const response = await sut.handle(httpRequest)
+    expect(response).toEqual(ok({ accessToken: 'valid_token' }))
+  })
 })
