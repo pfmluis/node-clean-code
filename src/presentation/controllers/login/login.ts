@@ -6,6 +6,11 @@ import { HttpResponse } from '../../protocols/http-response';
 
 export class LoginController implements Controller {
   public async handle(request: HttpRequest): Promise<HttpResponse> {
+
+    if (!request.body.password) {
+      return badRequest(new MissingParamError('password is not defined'))
+    }
+
     return badRequest(new MissingParamError('email is not defined'))
   }
   
