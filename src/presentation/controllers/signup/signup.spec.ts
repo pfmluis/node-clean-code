@@ -3,6 +3,7 @@ import { AddAccount, AddAccountModel } from "../../../domain/use-cases/add-accou
 import { InvalidParamError } from "../../errors/invalid-param-error";
 import { MissingParamError } from "../../errors/missing-param-error";
 import { ServerError } from "../../errors/server-error";
+import { badRequest } from '../../helpers/http-helpers';
 import { Validator } from '../../helpers/validators/validator';
 import { EmailValidator } from "../../protocols/email-validator";
 import { SignUpController } from "./signup";
@@ -273,5 +274,23 @@ describe('SignUp Controller', () => {
 
     await sut.handle(httpRequest)
     expect(validateSpy).toHaveBeenCalledWith(httpRequest.body)
+  });
+
+  test('Should return 400 if valid returns an error', async () => {
+    const { sut, validatorStub } = makeSut()
+    const error = new MissingParamError('some error')
+    jest.spyOn(validatorStub, 'validate').mockReturnValueOnce(error)
+
+    const httpRequest = {
+      body: {
+        email: 'any_email@mail.com',
+        name: 'any_name',
+        password: 'any_password',
+        passwordConfirmation: 'any_password'
+      }
+    }
+
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(badRequest(error))
   });
 })
