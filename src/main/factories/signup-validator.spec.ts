@@ -19,17 +19,14 @@ const makeEmailValidator = () => {
 
 describe('SignUpValidator Factory', () => {
   test('Should call ValidationComposite with all validations', () => {
-
-    const emailValidator = makeEmailValidator()
-
-    makeSignupValidator(emailValidator)
+    makeSignupValidator()
     expect(ValidationComposite).toHaveBeenCalledWith([
       new RequiredFieldValidator('name'),
       new RequiredFieldValidator('email'),
       new RequiredFieldValidator('password'),
       new RequiredFieldValidator('passwordConfirmation'),
       new CompareFieldsValidator('passwordConfirmation', 'password'),
-      new EmailFieldValidator('email', emailValidator)
+      new EmailFieldValidator('email', makeEmailValidator())
     ])
   })
 })

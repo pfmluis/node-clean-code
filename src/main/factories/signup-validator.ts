@@ -6,13 +6,13 @@ import { EmailValidator } from '../../presentation/protocols/email-validator';
 import { EmailValidatorAdapter } from '../../utils/email-validator-adapter';
 
 
-export const makeSignupValidator = (emailValidator: EmailValidator): ValidationComposite => {
+export const makeSignupValidator = (): ValidationComposite => {
   return new ValidationComposite([
     new RequiredFieldValidator('name'),
     new RequiredFieldValidator('email'),
     new RequiredFieldValidator('password'),
     new RequiredFieldValidator('passwordConfirmation'),
     new CompareFieldsValidator('passwordConfirmation', 'password'),
-    new EmailFieldValidator('email', emailValidator)
+    new EmailFieldValidator('email', new EmailValidatorAdapter())
   ])
 }
