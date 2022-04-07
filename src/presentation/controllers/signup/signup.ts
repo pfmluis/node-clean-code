@@ -21,18 +21,8 @@ export class SignUpController implements Controller {
       if (error) {
         return badRequest(error)
       }
-      const fieldNames = ['name', 'email', 'password', 'passwordConfirmation']
-      for (const fieldName of fieldNames) {
-        if (!(fieldName in request.body)) {
-          return badRequest(new MissingParamError(fieldName))
-        }
-      }
 
-      const { name, email, password, passwordConfirmation } = request.body
-
-      if (password !== passwordConfirmation) {
-        return badRequest(new InvalidParamError('passwordConfirmation'))
-      }
+      const { name, email, password } = request.body
   
       const isEmailValid = this.emailValidator.isValid(email)
       if (!isEmailValid) {
