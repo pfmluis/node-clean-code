@@ -1,3 +1,4 @@
+import { InvalidParamError } from '../../errors/invalid-param-error';
 import { EmailValidator } from '../../protocols/email-validator';
 import { EmailFieldValidator } from './email-validator';
 
@@ -53,4 +54,21 @@ describe('Email Field Validator', () => {
 
     expect(sut.validate).toThrow()
   });
+
+  test('Should return InvalidFieldError if email is not valid', () => {
+    const { sut, emailValidatorStub } = makeSut()
+    const input = { email: 'some_invalid_email@emial.com' }
+    jest.spyOn(emailValidatorStub, 'isValid').mockReturnValueOnce(false)
+
+    const result = sut.validate(input)
+    expect(result).toEqual(new InvalidParamError('email'))
+  })
+
+  test('Should return null if two fields match', () => {
+    const { sut } = makeSut()
+    const input = { email: 'some_email@emial.com' }
+
+    const result = sut.validate(input)
+    expect(result).toBe(null)
+  })
 })
