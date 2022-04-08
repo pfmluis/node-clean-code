@@ -12,5 +12,7 @@ export class EmailFieldValidator implements Validator {
     if (!this.emailValidator.isValid(input[this.fieldName])) {
       return new InvalidParamError(this.fieldName)
     }
+
+    return null
   }
 }

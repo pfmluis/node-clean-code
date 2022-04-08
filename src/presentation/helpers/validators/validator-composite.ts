@@ -10,6 +10,8 @@ export class ValidationComposite implements Validator {
       if (error) {
         return error
       }
+
+      return null
     }
   }
 }

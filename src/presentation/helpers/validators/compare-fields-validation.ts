@@ -12,5 +12,7 @@ export class CompareFieldsValidator implements Validator {
     if (input[this.fieldName] !== input[this.fieldToCompare]) {
       return new InvalidParamError(this.fieldName)
     }
+
+    return null
   }
 }
