@@ -1,4 +1,4 @@
-import { Validator } from './validator';
+import { Validator } from '../../protocols/validator';
 
 export class ValidatorComposite implements Validator {
 

@@ -1,5 +1,5 @@
 import { InvalidParamError } from '../../errors/invalid-param-error';
-import { Validator } from './validator';
+import { Validator } from '../../protocols/validator';
 
 export class CompareFieldsValidator implements Validator {
 

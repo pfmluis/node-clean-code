@@ -1,10 +1,9 @@
 import { AccountModel } from "../../../domain/models/account";
 import { AddAccount, AddAccountModel } from "../../../domain/use-cases/add-account";
-import { InvalidParamError } from "../../errors/invalid-param-error";
 import { MissingParamError } from "../../errors/missing-param-error";
 import { ServerError } from "../../errors/server-error";
-import { badRequest } from '../../helpers/http-helpers';
-import { Validator } from '../../helpers/validators/validator';
+import { badRequest } from '../../helpers/http/http-helpers';
+import { Validator } from '../../protocols/validator';
 import { SignUpController } from "./signup";
 
 interface SutTypes {
