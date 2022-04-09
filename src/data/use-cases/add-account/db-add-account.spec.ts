@@ -1,6 +1,6 @@
 import { AccountModel } from '../../../domain/models/account';
 import { AddAccountModel } from '../../../domain/use-cases/add-account';
-import { Encryptor } from '../../protocols/encryptor';
+import { Encryptor } from '../../protocols/cryptography/encryptor';
 import { DbAddAccount } from './db-add-account';
 
 class EncryptorStub implements Encryptor {
