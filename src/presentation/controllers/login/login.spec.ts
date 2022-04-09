@@ -1,4 +1,4 @@
-import { Authenticator } from '../../../domain/use-cases/authenticator'
+import { AuthenticationModel, Authenticator } from '../../../domain/use-cases/authenticator'
 import { MissingParamError } from '../../errors/missing-param-error'
 import { badRequest, serverError, unauthorized, ok } from '../../helpers/http/http-helpers'
 import { Validator } from '../../protocols/validator'
@@ -23,7 +23,7 @@ const makeValidator = (): Validator => {
 
 const makeAuthenticator = (): Authenticator => {
   class AuthenticatorStub implements Authenticator {
-    async authenticate(email: string, password: string): Promise<string> {
+    async authenticate(auth: AuthenticationModel): Promise<string> {
       return 'valid_token'
     }
   }
@@ -54,9 +54,10 @@ describe('Login Controller', () => {
       }
     }
     await sut.handle(httpRequest)
-    expect(authenticatorSpy).toHaveBeenCalledWith(
-      httpRequest.body.email, 
-      httpRequest.body.password,
+    expect(authenticatorSpy).toHaveBeenCalledWith({
+      email: httpRequest.body.email, 
+      password: httpRequest.body.password,
+    }
     )
   })
 
