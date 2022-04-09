@@ -3,6 +3,11 @@ import { AuthenticationModel } from '../../../domain/use-cases/authenticator'
 import { LoadAccountByEmailRepository } from '../../protocols/load-account-by-email'
 import { DbAuthenticator } from './db-authenticator'
 
+interface SutTypes {
+  sut: DbAuthenticator
+  loadAccountByEmailStub: LoadAccountByEmailRepository
+}
+
 const makeAccountByEmailRepositoryStub = () => {
   class AccountByEmailStub implements LoadAccountByEmailRepository {
     async load(email: string): Promise<AccountModel> {
@@ -18,20 +23,20 @@ const makeAccountByEmailRepositoryStub = () => {
   return new AccountByEmailStub()
 }
 
-const makeSut = () => {
-  const loadAccountByEmail = makeAccountByEmailRepositoryStub()
-  const sut = new DbAuthenticator(loadAccountByEmail)
+const makeSut = (): SutTypes => {
+  const loadAccountByEmailStub = makeAccountByEmailRepositoryStub()
+  const sut = new DbAuthenticator(loadAccountByEmailStub)
   
   return {
     sut,
-    loadAccountByEmail,
+    loadAccountByEmailStub,
   }
 }
 
 describe('DbAuthentication UseCase', () => {
-  test('Should call LoadAccountByEmail with correct email', async () => {
-    const { sut, loadAccountByEmail } = makeSut()
-    const loadAccountByEmailSpy = jest.spyOn(loadAccountByEmail, 'load')
+  test('Should call LoadAccountByEmailRepository with correct email', async () => {
+    const { sut, loadAccountByEmailStub } = makeSut()
+    const loadAccountByEmailSpy = jest.spyOn(loadAccountByEmailStub, 'load')
     const auth: AuthenticationModel = {
       email: 'some_valid@email.com',
       password: 'some_password',
@@ -39,5 +44,17 @@ describe('DbAuthentication UseCase', () => {
 
     await sut.authenticate(auth)
     expect(loadAccountByEmailSpy).toHaveBeenCalledWith(auth.email)
+  })
+
+  test('Should throw if LoadAccountByEmailRepository throws', async () => {
+    const { sut, loadAccountByEmailStub } = makeSut()
+    jest.spyOn(loadAccountByEmailStub, 'load').mockReturnValue(Promise.reject(new Error()))
+    const auth: AuthenticationModel = {
+      email: 'some_valid@email.com',
+      password: 'some_password',
+    }
+
+    const promise = sut.authenticate(auth)
+    expect(promise).rejects.toThrow()
   })
 })
