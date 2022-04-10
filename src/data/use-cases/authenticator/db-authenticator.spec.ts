@@ -1,7 +1,7 @@
 import { AccountModel } from '../../../domain/models/account'
 import { AuthenticationModel, Authenticator } from '../../../domain/use-cases/authenticator'
 import { HashComparer } from '../../protocols/cryptography/hash-comparer'
-import { TokenGenerator } from '../../protocols/cryptography/token-generator'
+import { Encryptor } from '../../protocols/cryptography/encryptor'
 import { LoadAccountByEmailRepository } from '../../protocols/db/load-account-by-email-repository'
 import { UpdateAccessTokenRepository } from '../../protocols/db/update-access-token-repository'
 import { DbAuthenticator } from './db-authenticator'
@@ -10,7 +10,7 @@ interface SutTypes {
   sut: Authenticator
   loadAccountByEmailStub: LoadAccountByEmailRepository
   hashComparerStub: HashComparer
-  tokenGeneratorStub: TokenGenerator,
+  encryptor: Encryptor,
   updateAccessTokenRepositoryStub: UpdateAccessTokenRepository
 }
 
@@ -39,9 +39,9 @@ const makeHashCompare = (): HashComparer => {
   return new HashComparerStub()
 }
 
-const makeTokenGeneratorStub = (): TokenGenerator => {
-  class TokenGeneratorStub implements TokenGenerator {
-    async generate(id: string): Promise<string> {
+const makeTokenGeneratorStub = (): Encryptor => {
+  class TokenGeneratorStub implements Encryptor {
+    async encrypt(id: string): Promise<string> {
       return 'some_token'
     }
   }
@@ -70,7 +70,7 @@ const makeSut = (): SutTypes => {
     sut,
     loadAccountByEmailStub,
     hashComparerStub,
-    tokenGeneratorStub,
+    encryptor: tokenGeneratorStub,
     updateAccessTokenRepositoryStub
   }
 }
@@ -150,20 +150,20 @@ describe('DbAuthentication UseCase', () => {
 
 
   test('Should call TokenGenerator with correct password', async () => {
-    const { sut, tokenGeneratorStub } = makeSut()
-    const generateSpy = jest.spyOn(tokenGeneratorStub, 'generate')
+    const { sut, encryptor: tokenGeneratorStub } = makeSut()
+    const encryptorSpy = jest.spyOn(tokenGeneratorStub, 'encrypt')
     const auth: AuthenticationModel = {
       email: 'some_valid@email.com',
       password: 'some_password',
     }
 
     await sut.authenticate(auth)
-    expect(generateSpy).toBeCalledWith('some_id')
+    expect(encryptorSpy).toBeCalledWith('some_id')
   })
 
   test('Should throw if TokenGenerator throws', async () => {
-    const { sut, tokenGeneratorStub } = makeSut()
-    jest.spyOn(tokenGeneratorStub, 'generate').mockReturnValue(Promise.reject(new Error()))
+    const { sut, encryptor: tokenGeneratorStub } = makeSut()
+    jest.spyOn(tokenGeneratorStub, 'encrypt').mockReturnValue(Promise.reject(new Error()))
     const auth: AuthenticationModel = {
       email: 'some_valid@email.com',
       password: 'some_password',
