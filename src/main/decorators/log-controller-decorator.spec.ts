@@ -3,7 +3,7 @@ import { serverError } from '../../presentation/helpers/http/http-helpers';
 import { Controller } from "../../presentation/protocols/controller";
 import { HttpRequest } from "../../presentation/protocols/http-request";
 import { HttpResponse } from "../../presentation/protocols/http-response";
-import { LogControllerDecorator } from "./log";
+import { LogControllerDecorator } from "./log-controller-decorator";
 
 interface SutTypes {
   sut: LogControllerDecorator,

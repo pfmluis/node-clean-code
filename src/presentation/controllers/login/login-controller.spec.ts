@@ -2,7 +2,7 @@ import { AuthenticationModel, Authenticator } from '../../../domain/use-cases/au
 import { MissingParamError } from '../../errors/missing-param-error'
 import { badRequest, serverError, unauthorized, ok } from '../../helpers/http/http-helpers'
 import { Validator } from '../../protocols/validator'
-import { LoginController } from './login'
+import { LoginController } from './login-controller'
 
 interface SutTypes {
   sut: LoginController,
@@ -57,8 +57,7 @@ describe('Login Controller', () => {
     expect(authenticatorSpy).toHaveBeenCalledWith({
       email: httpRequest.body.email, 
       password: httpRequest.body.password,
-    }
-    )
+    })
   })
 
   test('Should call 401 if invalid credentials are provided', async () => {

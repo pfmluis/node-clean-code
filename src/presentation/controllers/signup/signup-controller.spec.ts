@@ -4,7 +4,7 @@ import { MissingParamError } from "../../errors/missing-param-error";
 import { ServerError } from "../../errors/server-error";
 import { badRequest } from '../../helpers/http/http-helpers';
 import { Validator } from '../../protocols/validator';
-import { SignUpController } from "./signup";
+import { SignUpController } from "./signup-controller";
 
 interface SutTypes {
   sut: SignUpController,
