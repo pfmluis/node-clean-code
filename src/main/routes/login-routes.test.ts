@@ -5,7 +5,7 @@ import app from '../config/app'
 
 const accountCollectionName = 'accounts'
 
-describe('Signup Routes', () => {
+describe('Login Routes', () => {
   beforeAll(async () => {
     await MongoHelper.connect(process.env.MONGO_URL)
   })
@@ -19,15 +19,17 @@ describe('Signup Routes', () => {
     await accountCollection.deleteMany({})
   })
 
-  test('Should return an account on success', async () => {
-    await request(app)
-      .post('/api/signup')
-      .send({
-        name: 'Valid Name',
-        email: 'valid.email@email.com',
-        password: 'valid_password',
-        passwordConfirmation: 'valid_password'
-      })
-      .expect(200)
+  describe('POST /signup', () => {
+    test('Should return 200 on success', async () => {
+      await request(app)
+        .post('/api/signup')
+        .send({
+          name: 'Valid Name',
+          email: 'valid.email@email.com',
+          password: 'valid_password',
+          passwordConfirmation: 'valid_password'
+        })
+        .expect(200)
+    })
   })
 })
