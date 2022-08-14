@@ -51,5 +51,15 @@ describe('Login Routes', () => {
         })
         .expect(200)
     })
+
+    test('Should return 401 on user not found', async () => {
+      await request(app)
+        .post('/api/login')
+        .send({
+          email: 'valid.email@email.com',
+          password: 'valid_password',
+        })
+        .expect(401)
+    })
   })
 })
