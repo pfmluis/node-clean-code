@@ -2,7 +2,7 @@ import { MongoHelper } from '../infrastructure/db/mongodb/helpers/mongo-helper';
 import env from './config/env';
 
 MongoHelper.connect(env.mongoUrl)
-.then(async () => {
+  .then(async () => {
     const app = (await import('./config/app')).default
     app.listen(3000, () => console.log('Server running on http://localhost:3000'))
   })
