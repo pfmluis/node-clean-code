@@ -3,7 +3,7 @@ FROM node:12
 WORKDIR /usr/src/node-clean-code
 
 COPY ./package.json .
-RUN npm ci
+RUN npm i --only=prod
 
 COPY ./dist ./dist
 
