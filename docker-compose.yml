@@ -13,10 +13,11 @@ services:
     container_name: "node-clean-code"
     build: "."
     restart: "always"
-    command: "npm run start"
+    command: "npm run debug"
     volumes:
       - "./dist:/usr/src/node-clean-code/dist"
     ports:
       - "3000:3000"
+      - "9222:9222"
     links:
       - "mongo"
