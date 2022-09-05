@@ -13,7 +13,7 @@ interface SutTypes {
 const makeValidator = (): Validator => {
   class ValidatorStub implements Validator {
     validate(input: any): Error {
-      return null
+      return null as any
     }
   }
   
@@ -62,7 +62,7 @@ describe('Login Controller', () => {
 
   test('Should call 401 if invalid credentials are provided', async () => {
     const { sut, authenticatorStub } = makeSut()
-    jest.spyOn(authenticatorStub, 'authenticate').mockImplementationOnce(() => Promise.resolve(null))
+    jest.spyOn(authenticatorStub, 'authenticate').mockImplementationOnce(() => Promise.resolve(null as any))
     const httpRequest = {
       body: {
         email: 'invalid_email@email.com',
@@ -75,7 +75,7 @@ describe('Login Controller', () => {
   })
 
 
-  test('Should call 500 if invalid credentials are provided', async () => {
+  test('Should call 500 if authenticator throws', async () => {
     const { sut, authenticatorStub } = makeSut()
     const error = new Error()
     jest.spyOn(authenticatorStub, 'authenticate').mockImplementationOnce(() => { throw error })
