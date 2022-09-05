@@ -6,16 +6,21 @@ import { Controller } from '../../../presentation/protocols/controller';
 import { LogControllerDecorator } from '../../decorators/log-controller-decorator';
 import { LogMongoRepository } from '../../../infrastructure/db/mongodb/log/log-repository';
 import { makeSignupValidator } from './signup-validator-factory';
+import { DbAuthenticator } from '../../../data/use-cases/authenticator/db-authenticator';
+import { JwtAdapter } from '../../../infrastructure/jwt-adapter/jwt-adapter';
+import env from '../../config/env';
 
 
 export const makeSignupController = (): Controller => {
   const bcryptSalt = 12
+  const signUpValidator = makeSignupValidator()
   const bcryptAdapter = new BcryptAdapter(bcryptSalt)
   const accountMongoRepository = new AccountMongoRepository()
   const addAccount = new DbAddAccount(bcryptAdapter, accountMongoRepository)
-  const signUpValidator = makeSignupValidator()
-
-  const signUpController = new SignUpController(addAccount, signUpValidator)
+  const jwtAdapter = new JwtAdapter(env.jwtSecret)
+  const authenticator = new DbAuthenticator(accountMongoRepository, bcryptAdapter, jwtAdapter, accountMongoRepository)
+  
+  const signUpController = new SignUpController(addAccount, signUpValidator, authenticator)
   const logMongoRepository = new LogMongoRepository()
 
   return new LogControllerDecorator(signUpController, logMongoRepository)

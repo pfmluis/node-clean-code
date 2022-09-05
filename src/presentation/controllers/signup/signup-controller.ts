@@ -4,11 +4,13 @@ import { Validator } from '../../protocols/validator'
 import { Controller } from "../../protocols/controller"
 import { HttpRequest } from "../../protocols/http-request"
 import { HttpResponse } from "../../protocols/http-response"
+import { Authenticator } from '../../../domain/use-cases/authenticator'
 
 export class SignUpController implements Controller {
   constructor (
     private readonly addAccount: AddAccount,
-    private readonly validator: Validator
+    private readonly validator: Validator,
+    private readonly authenticator: Authenticator,
   ) {}
 
   public async handle(request: HttpRequest): Promise<HttpResponse> {
@@ -19,14 +21,16 @@ export class SignUpController implements Controller {
       }
 
       const { name, email, password } = request.body
-      const account = await this.addAccount.add({
+      await this.addAccount.add({
         email,
         name,
         password
       })
-
-      return ok(account)
+      const accessToken = await this.authenticator.authenticate({ email, password })
+      return ok({ accessToken })
     } catch (error) {
+      console.log(error);
+
       return serverError(error)
     }
   }
