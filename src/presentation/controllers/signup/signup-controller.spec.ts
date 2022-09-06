@@ -83,6 +83,24 @@ describe('SignUp Controller', () => {
     })
   });
 
+  test('Should return 400 if email already exists', async () => {
+    const { sut, addAccountStub } = makeSut()
+    const httpRequest = {
+      body: {
+        name: 'any_name',
+        email: 'any_email@email.com',
+        password: 'any_password',
+        passwordConfirmation: 'any_password'
+      }
+    }
+
+    jest.spyOn(addAccountStub, 'add').mockImplementationOnce(() => Promise.resolve(null))
+
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse.statusCode).toBe(400)
+    expect(httpResponse.body).toEqual(new Error('Email already exists'))
+  });
+
   test('Should return 500 if EmailValidator throws', async () => {
     const { sut, addAccountStub } = makeSut()
     const httpRequest = {
