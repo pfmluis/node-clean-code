@@ -1,9 +1,7 @@
 import { Authenticator } from '../../../domain/use-cases/authenticator';
-import { MissingParamError } from '../../errors/missing-param-error';
 import { badRequest, ok, serverError, unauthorized } from '../../helpers/http/http-helpers';
 import { Validator } from '../../protocols/validator';
 import { Controller } from '../../protocols/controller';
-import { EmailValidator } from '../../protocols/email-validator';
 import { HttpRequest } from '../../protocols/http-request';
 import { HttpResponse } from '../../protocols/http-response';
 
