@@ -1,0 +1,14 @@
+import { Controller } from '../../../protocols/controller';
+import { HttpRequest } from '../../../protocols/http-request';
+import { HttpResponse } from '../../../protocols/http-response';
+import { Validator } from '../../../protocols/validator';
+
+export class AddSurveyController implements Controller {
+
+  constructor(private readonly validator: Validator) {}
+
+  async handle(request: HttpRequest): Promise<HttpResponse> {
+    this.validator.validate(request.body)
+    return null
+  }  
+}
