@@ -1,5 +1,3 @@
-import env from '../../../config/env'
-import { DbAuthenticator } from '../../../../data/use-cases/authenticator/db-authenticator';
 import { LogMongoRepository } from '../../../../infrastructure/db/mongodb/log/log-repository';
 import { LoginController } from '../../../../presentation/controllers/auth/login/login-controller';
 import { Controller } from '../../../../presentation/protocols/controller';
