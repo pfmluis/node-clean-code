@@ -38,11 +38,11 @@ describe('DbAddSurvey Usecase', () => {
   test('Should call AddSurveyRepository with correct values', async () => {
 
     const { sut, addSurveyRepositoryStub } = makeSut()
-    const addSurbeyRepositoryStubSpy = jest.spyOn(addSurveyRepositoryStub, 'add')
+    const addSurveyRepositoryStubSpy = jest.spyOn(addSurveyRepositoryStub, 'add')
     const surveyData = makeFakeSurvey()
     await sut.add(surveyData)
 
-    expect(addSurbeyRepositoryStubSpy).toHaveBeenCalledWith(surveyData)
+    expect(addSurveyRepositoryStubSpy).toHaveBeenCalledWith(surveyData)
   });
 
   test('Should call AddSurveyRepository with correct values', async () => {
