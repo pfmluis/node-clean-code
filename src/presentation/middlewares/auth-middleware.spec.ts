@@ -1,5 +1,5 @@
 import { AccessDeniedError } from '../errors/access-denied-error'
-import { forbidden, ok } from '../helpers/http/http-helpers'
+import { forbidden, ok, serverError } from '../helpers/http/http-helpers'
 import { AuthMiddleware } from './auth-middleware'
 import { LoadAccountByToken } from '../../domain/use-cases/load-account-by-token'
 import { AccountModel } from '../../domain/models/account';
@@ -32,9 +32,9 @@ const makeLoadAccountByTokenStub = () => {
   return new LoadAccountByTokenStub()
 }
 
-const makeSut = (): SutTypes => {
+const makeSut = (role?: string): SutTypes => {
   const loadAccountByTokenStub = makeLoadAccountByTokenStub()
-  const sut = new AuthMiddleware(loadAccountByTokenStub)
+  const sut = new AuthMiddleware(loadAccountByTokenStub, role)
 
   return {
      loadAccountByTokenStub,
@@ -51,11 +51,12 @@ describe('Auth Middleware', () => {
   });
 
   test('should call LoadAccountByToken with correct access token', async () => {
-    const { sut, loadAccountByTokenStub } = makeSut()
+    const role = 'any_role'
+    const { sut, loadAccountByTokenStub } = makeSut(role)
     const loadAccountByTokenSpy = jest.spyOn(loadAccountByTokenStub, 'load')
     await sut.handle(makeFakeRequest())
 
-    expect(loadAccountByTokenSpy).toHaveBeenCalledWith('any_token')
+    expect(loadAccountByTokenSpy).toHaveBeenCalledWith('any_token', role)
   })
 
   test('should return 403 when LoadAccountByToken returns null', async () => {
@@ -72,5 +73,13 @@ describe('Auth Middleware', () => {
     const httpResponse = await sut.handle(makeFakeRequest())
 
     expect(httpResponse).toEqual(ok({ accountId: 'some_id' }))
+  })
+
+  test('should return 500 when LoadAccountByToken throws', async () => {
+    const { sut, loadAccountByTokenStub } = makeSut()
+    jest.spyOn(loadAccountByTokenStub, 'load').mockResolvedValueOnce(Promise.reject(new Error('some_error')))
+    const httpResponse = await sut.handle(makeFakeRequest())
+
+    expect(httpResponse).toEqual(serverError(new Error('some_error')))
   })
 });
