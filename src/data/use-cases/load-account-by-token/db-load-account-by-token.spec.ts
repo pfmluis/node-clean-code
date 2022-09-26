@@ -72,4 +72,11 @@ describe('DbLoadAccountByToken Use Case', () => {
     await sut.load('test_string', 'some_role')
     expect(LoadAccountByTokenRepositorySpy).toHaveBeenCalledWith('test_string', 'some_role')
   });
+
+  test('Should return account on success', async () => {
+    const { sut } = makeSut()
+
+    const result = await sut.load('test_string', 'some_role')
+    expect(result).toEqual(makeFakeAccount())
+  });
 });
