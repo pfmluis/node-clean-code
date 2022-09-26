@@ -21,61 +21,67 @@ describe('Account Mongo Repository', () => {
     return new AccountMongoRepository() 
   }
 
-  test('Should return an account on success', async () => {
-    const sut = makeSut()
-    const accountData = {
-      email: 'any_email@email.com',
-      name: 'any_name',
-      password: 'any_password'
-    }
-
-    const account = await sut.add(accountData)
-    expect(account).toBeTruthy()
-    expect(account.id).toBeTruthy()
-    expect(account.email).toBe('any_email@email.com')
-    expect(account.name).toBe('any_name')
-    expect(account.password).toBe('any_password')
+  describe('Add', () => {
+    test('Should return an account on success', async () => {
+      const sut = makeSut()
+      const accountData = {
+        email: 'any_email@email.com',
+        name: 'any_name',
+        password: 'any_password'
+      }
+  
+      const account = await sut.add(accountData)
+      expect(account).toBeTruthy()
+      expect(account.id).toBeTruthy()
+      expect(account.email).toBe('any_email@email.com')
+      expect(account.name).toBe('any_name')
+      expect(account.password).toBe('any_password')
+    });
   });
 
-  test('Should return an account on loadByEmail success', async () => {
-    const sut = makeSut()
-    const accountData = {
-      email: 'any_email@email.com',
-      name: 'any_name',
-      password: 'any_password'
-    }
-
-    await (await MongoHelper.getConnection('accounts')).insertOne(accountData)
-
-    const account = await sut.loadByEmail(accountData.email)
-    expect(account).toBeTruthy()
-    expect(account.id).toBeTruthy()
-    expect(account.email).toBe('any_email@email.com')
-    expect(account.name).toBe('any_name')
-    expect(account.password).toBe('any_password')
+  describe('LoadByEmail', () => {
+    test('Should return an account on loadByEmail success', async () => {
+      const sut = makeSut()
+      const accountData = {
+        email: 'any_email@email.com',
+        name: 'any_name',
+        password: 'any_password'
+      }
+  
+      await (await MongoHelper.getConnection('accounts')).insertOne(accountData)
+  
+      const account = await sut.loadByEmail(accountData.email)
+      expect(account).toBeTruthy()
+      expect(account.id).toBeTruthy()
+      expect(account.email).toBe('any_email@email.com')
+      expect(account.name).toBe('any_name')
+      expect(account.password).toBe('any_password')
+    })
+  
+  
+    test('Should return a null if no account was found', async () => {
+      const sut = makeSut()
+      const account = await sut.loadByEmail("test_email@email.com")
+      expect(account).toBeFalsy()
+    })
   })
 
-
-  test('Should return a null if no account was found', async () => {
-    const sut = makeSut()
-    const account = await sut.loadByEmail("test_email@email.com")
-    expect(account).toBeFalsy()
-  })
-
-  test('Should update the account accessToken on updateAccessToken success', async () => {
-    const accountCollection = await MongoHelper.getConnection('accounts')
-    const sut = makeSut()
-    const accountData = {
-      email: 'any_email@email.com',
-      name: 'any_name',
-      password: 'any_password'
-    }
-    const testToken = 'test_token'
-
-    const testResult = await accountCollection.insertOne(accountData)
-    await sut.updateAccessToken(testResult.ops[0]._id, testToken)
-    const testFoundResult = await accountCollection.findOne({ email: accountData.email })
-    
-    expect(testFoundResult.accessToken).toBe(testToken)
-  })
+  describe('UpdateAccessToken', () => {
+    test('Should update the account accessToken on updateAccessToken success', async () => {
+      const accountCollection = await MongoHelper.getConnection('accounts')
+      const sut = makeSut()
+      const accountData = {
+        email: 'any_email@email.com',
+        name: 'any_name',
+        password: 'any_password'
+      }
+      const testToken = 'test_token'
+  
+      const testResult = await accountCollection.insertOne(accountData)
+      await sut.updateAccessToken(testResult.ops[0]._id, testToken)
+      const testFoundResult = await accountCollection.findOne({ email: accountData.email })
+      
+      expect(testFoundResult.accessToken).toBe(testToken)
+    })
+  });
 });
