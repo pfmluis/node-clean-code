@@ -1,10 +1,10 @@
-import { AddAccount } from "../../../domain/use-cases/add-account"
-import { badRequest, serverError, ok } from "../../helpers/http/http-helpers"
-import { Validator } from '../../protocols/validator'
-import { Controller } from "../../protocols/controller"
-import { HttpRequest } from "../../protocols/http-request"
-import { HttpResponse } from "../../protocols/http-response"
-import { Authenticator } from '../../../domain/use-cases/authenticator'
+import { AddAccount } from "../../../../domain/use-cases/add-account"
+import { badRequest, serverError, ok } from "../../../helpers/http/http-helpers"
+import { Validator } from '../../../protocols/validator'
+import { Controller } from "../../../protocols/controller"
+import { HttpRequest } from "../../../protocols/http-request"
+import { HttpResponse } from "../../../protocols/http-response"
+import { Authenticator } from '../../../../domain/use-cases/authenticator'
 
 export class SignUpController implements Controller {
   constructor (

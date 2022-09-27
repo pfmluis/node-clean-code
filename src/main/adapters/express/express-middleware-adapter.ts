@@ -1,17 +1,18 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { Controller } from '../../../presentation/protocols/controller';
 import { HttpRequest } from '../../../presentation/protocols/http-request';
 
-export const adaptRoute = (controller: Controller) => {
-  return async (req: Request, res: Response) => {
+export const adaptMiddleware = (middleware: Controller) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
     const httpRequest: HttpRequest = {
-      body: req.body
+      headers: req.headers
     }
 
-    const httpResponse = await controller.handle(httpRequest)
+    const httpResponse = await middleware.handle(httpRequest)
 
     if (httpResponse.statusCode === 200 || httpResponse.statusCode === 204) {
-      res.status(httpResponse.statusCode).json(httpResponse.body)
+      req['x-user'] = httpResponse.body
+      next()
     } else {
       res.status(httpResponse.statusCode).json({
         error: httpResponse.body.message
