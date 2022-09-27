@@ -35,7 +35,7 @@ describe('Survey Routes', () => {
             image: 'any_image'
           }]
         })
-        .expect(204)
+        .expect(403)
     })
   })
 })
