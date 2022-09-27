@@ -1,6 +1,7 @@
-import { AuthenticationModel, Authenticator } from '../../../../domain/use-cases/authenticator'
-import { badRequest, serverError, unauthorized, ok } from '../../../helpers/http/http-helpers'
-import { Validator } from '../../../protocols/validator'
+import { AuthenticationModel, Authenticator } from '../../../domain/use-cases/authenticator'
+import { MissingParamError } from '../../errors/missing-param-error'
+import { badRequest, serverError, unauthorized, ok } from '../../helpers/http/http-helpers'
+import { Validator } from '../../protocols/validator'
 import { LoginController } from './login-controller'
 
 interface SutTypes {
