@@ -29,12 +29,30 @@ describe('Survey Mongo Repository', () => {
     return new SurveyMongoRepository() 
   }
 
-  test('Should add a survey on success', async () => {
-    const sut = makeSut()
-    await sut.add(makeFakeSurveyData())
-
-    const result = await (await MongoHelper.getConnection(surveyCollectionName)).findOne({ question: 'some_question'})
-    expect(result).toBeTruthy()
+  describe('Add', () => {
+    test('Should add a survey on success', async () => {
+      const sut = makeSut()
+      await sut.add(makeFakeSurveyData())
+  
+      const result = await (await MongoHelper.getConnection(surveyCollectionName)).findOne({ question: 'some_question'})
+      expect(result).toBeTruthy()
+    });
   });
+
+  describe('Load all', () => {
+    test('Should load all surveys', async () => {
+      const expectedResult = [
+        makeFakeSurveyData(),
+        makeFakeSurveyData(),
+      ]
+      await (await MongoHelper.getConnection(surveyCollectionName)).insertMany(expectedResult)
+      
+      const sut = makeSut()
+      const result = await sut.loadAll()
+
+      expect(result.length).toBe(2)
+      expect(result).toEqual(expectedResult)
+    })
+  })
 
 });
