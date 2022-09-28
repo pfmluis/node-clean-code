@@ -1,5 +1,6 @@
 import { SurveyModel } from '../../../../domain/models/survey'
 import { LoadSurveys } from '../../../../domain/use-cases/load-surveys'
+import { ok, serverError } from '../../../helpers/http/http-helpers'
 import { LoadSurveysController } from './load-surveys-controller'
 
 type SutTypes = {
@@ -52,5 +53,20 @@ describe('LoadSurveys Controller', () => {
 
     await sut.handle({})
     expect(loadSurveysSpy).toHaveBeenCalled()
+  });
+
+  test('Should throw if LoadSurveys throws', async () => {
+    const { sut, loadSurveysStub } = makeSut()
+    jest.spyOn(loadSurveysStub, 'load').mockRejectedValueOnce(new Error())
+
+    const response = await sut.handle({})
+    expect(response).toEqual(serverError(new Error()))
+  })
+ 
+  test('Should return 200 on success', async () => {
+    const { sut } = makeSut()
+
+    const response = await sut.handle({})
+    expect(response).toEqual(ok(makeFakeSurveys()))
   });
 });
