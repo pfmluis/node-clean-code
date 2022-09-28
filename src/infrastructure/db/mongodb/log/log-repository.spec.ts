@@ -7,7 +7,7 @@ describe('LogError Mongo Repository', () => {
   let errorsConnection: Collection
 
   beforeAll(async () => {
-    await MongoHelper.connect(process.env.MONGO_URL)
+    await MongoHelper.connect(process.env.MONGO_URL!)
   })
 
   afterAll(async () => {
