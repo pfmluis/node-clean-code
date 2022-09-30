@@ -10,8 +10,8 @@ export const makeAddSurveyController = (): Controller => {
 const validator = makeAddSurveyValidator()
   const dbAddSurveyRepository = new SurveyMongoRepository()
   const dbAddSurvey = new DbAddSurvey(dbAddSurveyRepository)
-  const loginController = new AddSurveyController(validator, dbAddSurvey)
+  const addSurveysController = new AddSurveyController(validator, dbAddSurvey)
   const logMongoRepository = new LogMongoRepository()
 
-  return new LogControllerDecorator(loginController, logMongoRepository)
+  return new LogControllerDecorator(addSurveysController, logMongoRepository)
 }

@@ -27,7 +27,7 @@ describe('Survey Routes', () => {
     await accountCollection.deleteMany({})
   })
 
-  describe('POST /signup', () => {
+  describe('POST /surveys', () => {
     test('Should return 403 on success', async () => {
       await request(app)
         .post('/api/surveys')
@@ -109,5 +109,13 @@ describe('Survey Routes', () => {
         }]
       })
       .expect(204)
+  })
+
+  describe('GET /surveys', () => {
+    test('Should return 403 on if access token is not provided', async () => {
+      await request(app)
+        .get('/api/surveys')
+        .expect(403)
+    })
   })
 })
