@@ -5,6 +5,12 @@ import { hash } from 'bcrypt'
 import { sign } from 'jsonwebtoken'
 import { MongoHelper } from '../../infrastructure/db/mongodb/helpers/mongo-helper'
 
+
+const surveyCollectionName = 'surveys'
+const accountCollectionName = 'accounts'
+let surveyCollection
+let accountCollection
+
 const makeFakeSurvey = () => ({
   question: 'any_question',
   answers: [{
@@ -16,10 +22,25 @@ const makeFakeSurvey = () => ({
   }]
 })
 
-const surveyCollectionName = 'surveys'
-const accountCollectionName = 'accounts'
-let surveyCollection
-let accountCollection
+const makeAccessTokenAndUpdateUser = async (role?: string): Promise<string> => {
+  const password = await hash('valid_password', 12)
+  const result = await accountCollection.insert({
+      email: 'valid.email@email.com',
+      role,
+      password
+  })
+  const id = result.ops[0]._id
+  const accessToken = sign({ id }, env.jwtSecret)
+  await accountCollection.updateOne({
+    _id: id
+  }, {
+    $set: {
+      accessToken
+    }
+  })
+  
+  return accessToken
+}
 
 describe('Survey Routes', () => {
   beforeAll(async () => {
@@ -47,21 +68,7 @@ describe('Survey Routes', () => {
   })
 
   test('Should return 403 on access with wrong role', async () => {
-    const password = await hash('valid_password', 12)
-    const result = await accountCollection.insert({
-        email: 'valid.email@email.com',
-        role: 'some_role',
-        password
-    })
-    const id = result.ops[0]._id
-    const accessToken = sign({ id }, env.jwtSecret)
-    await accountCollection.updateOne({
-      _id: id
-    }, {
-      $set: {
-        accessToken
-      }
-    })
+    const accessToken = await makeAccessTokenAndUpdateUser('some_role')
 
     await request(app)
       .post('/api/surveys')
@@ -71,21 +78,7 @@ describe('Survey Routes', () => {
   })
 
   test('Should return 204 on success', async () => {
-    const password = await hash('valid_password', 12)
-    const result = await accountCollection.insert({
-        email: 'valid.email@email.com',
-        role: 'admin',
-        password
-    })
-    const id = result.ops[0]._id
-    const accessToken = sign({ id }, env.jwtSecret)
-    await accountCollection.updateOne({
-      _id: id
-    }, {
-      $set: {
-        accessToken
-      }
-    })
+    const accessToken = await makeAccessTokenAndUpdateUser('admin')
 
     await request(app)
       .post('/api/surveys')
@@ -102,21 +95,7 @@ describe('Survey Routes', () => {
     })
 
   test('Should return 204 on success', async () => {
-    const password = await hash('valid_password', 12)
-    const result = await accountCollection.insert({
-        email: 'valid.email@email.com',
-        role: 'admin',
-        password
-    })
-    const id = result.ops[0]._id
-    const accessToken = sign({ id }, env.jwtSecret)
-    await accountCollection.updateOne({
-      _id: id
-    }, {
-      $set: {
-        accessToken
-      }
-    })
+    const accessToken = await makeAccessTokenAndUpdateUser()
 
     await request(app)
       .get('/api/surveys')
