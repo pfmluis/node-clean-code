@@ -5,6 +5,16 @@ import { hash } from 'bcrypt'
 import { sign } from 'jsonwebtoken'
 import { MongoHelper } from '../../infrastructure/db/mongodb/helpers/mongo-helper'
 
+const makeFakeSurvey = () => ({
+  question: 'any_question',
+  answers: [{
+    answer: 'any_answer1',
+    image: 'any_image'
+  }, {
+    answer: 'any_answer2',
+    image: 'any_image'
+  }]
+})
 
 const surveyCollectionName = 'surveys'
 const accountCollectionName = 'accounts'
@@ -31,16 +41,7 @@ describe('Survey Routes', () => {
     test('Should return 403 on success', async () => {
       await request(app)
         .post('/api/surveys')
-        .send({
-          question: 'any_question',
-          answers: [{
-            answer: 'any_answer1',
-            image: 'any_image'
-          }, {
-            answer: 'any_answer2',
-            image: 'any_image'
-          }]
-        })
+        .send(makeFakeSurvey())
         .expect(403)
     })
   })
@@ -65,16 +66,7 @@ describe('Survey Routes', () => {
     await request(app)
       .post('/api/surveys')
       .set('x-access-token', accessToken)
-      .send({
-        question: 'any_question',
-        answers: [{
-          answer: 'any_answer1',
-          image: 'any_image'
-        }, {
-          answer: 'any_answer2',
-          image: 'any_image'
-        }]
-      })
+      .send(makeFakeSurvey())
       .expect(403)
   })
 
@@ -98,16 +90,7 @@ describe('Survey Routes', () => {
     await request(app)
       .post('/api/surveys')
       .set('x-access-token', accessToken)
-      .send({
-        question: 'any_question',
-        answers: [{
-          answer: 'any_answer1',
-          image: 'any_image'
-        }, {
-          answer: 'any_answer2',
-          image: 'any_image'
-        }]
-      })
+      .send(makeFakeSurvey())
       .expect(204)
   })
 
@@ -117,5 +100,28 @@ describe('Survey Routes', () => {
         .get('/api/surveys')
         .expect(403)
     })
+
+  test('Should return 204 on success', async () => {
+    const password = await hash('valid_password', 12)
+    const result = await accountCollection.insert({
+        email: 'valid.email@email.com',
+        role: 'admin',
+        password
+    })
+    const id = result.ops[0]._id
+    const accessToken = sign({ id }, env.jwtSecret)
+    await accountCollection.updateOne({
+      _id: id
+    }, {
+      $set: {
+        accessToken
+      }
+    })
+
+    await request(app)
+      .get('/api/surveys')
+      .set('x-access-token', accessToken)
+      .expect(200)
+  })
   })
 })
